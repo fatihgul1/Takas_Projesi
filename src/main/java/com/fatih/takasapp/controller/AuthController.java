@@ -35,8 +35,18 @@ public class AuthController {
                 .map(u -> "Giriş başarılı!")
                 .orElse("Geçersiz email veya şifre!");
     }
+
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return "Kullanıcı başarıyla silindi!";
+        }
+        return "Kullanıcı bulunamadı!";
     }
 }
