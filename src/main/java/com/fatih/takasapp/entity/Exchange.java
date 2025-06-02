@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "exchanges")
 public class Exchange {
 
     @Id
@@ -22,6 +23,7 @@ public class Exchange {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)

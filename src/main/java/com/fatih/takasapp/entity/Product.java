@@ -1,6 +1,7 @@
 package com.fatih.takasapp.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product")
@@ -16,15 +17,22 @@ public class Product {
 
     private String category;
 
-    private String price;
+    private BigDecimal price;  // Fiyatı BigDecimal türünde tutmak daha doğru
 
     private String image;
+
+    public enum ProductStatus {
+        FOR_SALE, FOR_EXCHANGE, BOTH
+    }
+
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
 
-    // Getter ve Setter metotları
+    // Getters ve Setters
 
     public Long getId() {
         return id;
@@ -58,11 +66,11 @@ public class Product {
         this.category = category;
     }
 
-    public String getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -72,6 +80,14 @@ public class Product {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 
     public User getOwner() {

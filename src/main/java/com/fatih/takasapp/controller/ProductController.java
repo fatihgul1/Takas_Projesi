@@ -2,6 +2,7 @@ package com.fatih.takasapp.controller;
 
 import com.fatih.takasapp.entity.Product;
 import com.fatih.takasapp.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,5 +35,10 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.delete(id);
+    }
+
+    @PostMapping("/add")
+    public Product addProduct(@RequestBody Product product) {
+        return productService.addProduct(product);
     }
 }

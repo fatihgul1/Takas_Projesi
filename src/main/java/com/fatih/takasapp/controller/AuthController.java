@@ -24,6 +24,9 @@ public class AuthController {
             return "Email zaten kayıtlı!";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getFirstName() == null || user.getLastName() == null) {
+            return "Ad ve soyad zorunludur!";
+        }
         userRepository.save(user);
         return "Kayıt başarılı!";
     }

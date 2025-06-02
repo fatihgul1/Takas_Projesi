@@ -4,6 +4,7 @@ import com.fatih.takasapp.entity.Product;
 import com.fatih.takasapp.entity.User;
 import com.fatih.takasapp.repository.ProductRepository;
 import com.fatih.takasapp.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,10 +12,11 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public ProductService(ProductRepository productRepository,UserRepository userRepository) {
+    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
@@ -41,5 +43,9 @@ public class ProductService {
 
     public void delete(Long id) {
         productRepository.deleteById(id);
+    }
+
+    public Product addProduct(Product product) {
+        return productRepository.save(product);
     }
 }
