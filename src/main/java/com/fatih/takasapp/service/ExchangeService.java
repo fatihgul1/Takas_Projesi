@@ -9,6 +9,7 @@ import com.fatih.takasapp.repository.ProductRepository;
 import com.fatih.takasapp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,5 +55,8 @@ public class ExchangeService {
             exchange.setStatus(status);
             return exchangeRepository.save(exchange);
         });
+    }
+    public List<Exchange> getAllExchanges() {
+        return exchangeRepository.findAll();
     }
 }

@@ -2,7 +2,6 @@ package com.fatih.takasapp.controller;
 
 import com.fatih.takasapp.entity.Product;
 import com.fatih.takasapp.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,5 +39,10 @@ public class ProductController {
     @PostMapping("/add")
     public Product addProduct(@RequestBody Product product) {
         return productService.addProduct(product);
+    }
+
+    @GetMapping("/user-products")
+    public List<Product> getUserProducts(@RequestParam Long userId) {
+        return productService.findByUserId(userId);
     }
 }

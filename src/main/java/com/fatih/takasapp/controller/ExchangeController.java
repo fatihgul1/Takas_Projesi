@@ -4,6 +4,7 @@ import com.fatih.takasapp.entity.Exchange;
 import com.fatih.takasapp.service.ExchangeService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -14,6 +15,12 @@ public class ExchangeController {
 
     public ExchangeController(ExchangeService exchangeService) {
         this.exchangeService = exchangeService;
+    }
+
+    // Tüm takas tekliflerini getir
+    @GetMapping
+    public List<Exchange> getAllExchanges() {
+        return exchangeService.getAllExchanges();
     }
 
     @PostMapping("/create")

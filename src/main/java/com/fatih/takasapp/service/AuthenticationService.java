@@ -5,6 +5,8 @@ import com.fatih.takasapp.dto.LoginRequest;
 import com.fatih.takasapp.dto.RegisterRequest;
 import com.fatih.takasapp.entity.User;
 import com.fatih.takasapp.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     @Autowired
     public AuthenticationService(
@@ -43,18 +46,21 @@ public class AuthenticationService {
         userRepository.save(user);
 
         String jwt = jwtService.generateToken(user.getEmail());
-        return new AuthResponse(jwt);
+
+        return new AuthResponse(jwt, user);
     }
 
-    public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public AuthResponse login(LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
 
-        String jwt = jwtService.generateToken(user.getEmail());
-        return new AuthResponse(jwt);
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Şifre yanlış");
+        }
+
+        String token = jwtService.generateToken(user.getEmail());
+
+        return new AuthResponse(token, user);
     }
 }
