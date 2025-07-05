@@ -6,10 +6,26 @@ spring:
     url: jdbc:postgresql://localhost:5432/takasdb
     username: postgres
     password: fatih123
+    driver-class-name: org.postgresql.Driver
+
   jpa:
+    hibernate:
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-    hibernate:
-      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      indent-output: true
+
+file:
+  upload-dir: C:/Users/Fatih/React-takasApp/uploads/

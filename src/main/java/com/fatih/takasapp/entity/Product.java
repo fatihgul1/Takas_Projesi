@@ -1,10 +1,11 @@
 package com.fatih.takasapp.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -12,27 +13,23 @@ public class Product {
     private Long id;
 
     private String name;
-
     private String description;
-
+    private Double price;
     private String category;
+    private String imageUrl;
+    private LocalDateTime createdAt;
 
-    private BigDecimal price;  // Fiyatı BigDecimal türünde tutmak daha doğru
+    @Column(nullable = false)
+    private boolean active= true;   //default: true
 
-    private String image;
-
-    public enum ProductStatus {
-        FOR_SALE, FOR_EXCHANGE, BOTH
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
-    @Enumerated(EnumType.STRING)
-    private ProductStatus status;
-
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "owner_id")
     private User owner;
-
-    // Getters ve Setters
 
     public Long getId() {
         return id;
@@ -58,6 +55,14 @@ public class Product {
         this.description = description;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -66,28 +71,12 @@ public class Product {
         this.category = category;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public ProductStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProductStatus status) {
-        this.status = status;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public User getOwner() {
@@ -97,4 +86,19 @@ public class Product {
     public void setOwner(User owner) {
         this.owner = owner;
     }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;}
 }

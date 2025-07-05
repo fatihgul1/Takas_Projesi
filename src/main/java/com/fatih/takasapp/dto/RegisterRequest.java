@@ -6,16 +6,18 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String city;
+    private String phoneNumber;
 
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String firstName, String lastName, String email, String password, String city) {
+    public RegisterRequest(String firstName, String lastName, String email, String password, String city, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.city = city;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getFirstName() {
@@ -52,6 +54,14 @@ public class RegisterRequest {
 
     public String getCity() {
         return city;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public void setCity(String city) {

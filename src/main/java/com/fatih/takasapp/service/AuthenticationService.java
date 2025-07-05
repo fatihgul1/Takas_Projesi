@@ -42,6 +42,7 @@ public class AuthenticationService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCity(request.getCity());
+        user.setPhoneNumber(request.getPhoneNumber());
 
         userRepository.save(user);
 
@@ -63,4 +64,5 @@ public class AuthenticationService {
 
         return new AuthResponse(token, user);
     }
+
 }

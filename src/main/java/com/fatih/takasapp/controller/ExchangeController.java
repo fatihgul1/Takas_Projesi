@@ -1,45 +1,56 @@
 package com.fatih.takasapp.controller;
 
+import com.fatih.takasapp.dto.ExchangeDTO;
+import com.fatih.takasapp.dto.ExchangeRequestDto;
 import com.fatih.takasapp.entity.Exchange;
+import com.fatih.takasapp.entity.ExchangeStatus;
 import com.fatih.takasapp.service.ExchangeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/exchanges")
+@RequestMapping("/api/exchange")
+@RequiredArgsConstructor
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
 
-    public ExchangeController(ExchangeService exchangeService) {
-        this.exchangeService = exchangeService;
+    @PostMapping
+    public ResponseEntity<Exchange> createExchange(@RequestBody ExchangeRequestDto dto, Principal principal) {
+        Exchange exchange = exchangeService.createExchange(
+                dto.getOfferedProductId(),
+                dto.getTargetProductId(),
+                principal.getName()
+        );
+        return ResponseEntity.ok(exchange);
     }
 
-    // Tüm takas tekliflerini getir
-    @GetMapping
-    public List<Exchange> getAllExchanges() {
-        return exchangeService.getAllExchanges();
+    @GetMapping("/incoming")
+    public List<ExchangeDTO> getIncoming(Principal principal) {
+        return exchangeService.getIncomingExchanges(principal.getName());
     }
 
-    @PostMapping("/create")
-    public Exchange createExchange(@RequestParam Long buyerId, @RequestParam Long sellerId, @RequestParam Long productId) {
-        return exchangeService.createExchange(buyerId, sellerId, productId);
+    @GetMapping("/outgoing")
+    public List<ExchangeDTO> getOutgoing(Principal principal) {
+        return exchangeService.getOutgoingExchanges(principal.getName());
     }
 
-    @PutMapping("/approve/{exchangeId}")
-    public Optional<Exchange> approveExchange(@PathVariable Long exchangeId) {
-        return exchangeService.approveExchange(exchangeId);
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestParam ExchangeStatus status) {
+        exchangeService.updateStatus(id, status);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/complete/{exchangeId}")
-    public Optional<Exchange> completeExchange(@PathVariable Long exchangeId) {
-        return exchangeService.completeExchange(exchangeId);
+    @GetMapping("/target/{productId}")
+    public ResponseEntity<ExchangeDTO> getOfferForTarget(@PathVariable Long productId, Principal principal) {
+        return exchangeService
+                .getOfferForTarget(productId, principal.getName())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 
-    @PutMapping("/cancel/{exchangeId}")
-    public Optional<Exchange> cancelExchange(@PathVariable Long exchangeId) {
-        return exchangeService.cancelExchange(exchangeId);
-    }
 }
